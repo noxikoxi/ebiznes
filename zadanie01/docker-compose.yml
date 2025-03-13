@@ -1,0 +1,9 @@
+services:
+  app:
+    image: "noxikoxi/my-java-app:latest"
+    build: .
+    ports:
+      - "8000:8080"
+    # volumes: niepotrzebne bo kopiuje pliki przez COPY
+    #   - .:/app
+    command: ['gradle', "run", "--no-daemon", "--quiet"] 

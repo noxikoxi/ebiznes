@@ -1,0 +1,26 @@
+plugins {
+    id 'application'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.xerial:sqlite-jdbc:+' // + oznacza najnowszą wersję 
+}
+
+jar {
+    archiveBaseName.set("Hello_World") // Nazwa Jara
+    archiveVersion.set("")  // Bez wersji w nazwie
+    manifest {
+        attributes(
+            'Main-Class': 'Main'
+        )
+    }
+}
+
+application {
+    applicationName = "Hello_World_App"
+    mainClass = 'Main'
+}
