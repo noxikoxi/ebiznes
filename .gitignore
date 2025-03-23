@@ -1,3 +1,4 @@
 .gradle/
 *.mp4
 tresc.tex
+.idea/
