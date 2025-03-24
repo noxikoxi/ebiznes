@@ -1,9 +1,10 @@
 package controllers
 
-import javax.inject._
-import play.api.libs.json._
-import play.api.mvc._
-import models.{Product, ProductData, DB}
+import javax.inject.*
+import play.api.libs.json.*
+import play.api.mvc.*
+import models.{DB, Product, ProductData}
+
 import scala.collection.mutable.ListBuffer
 
 @Singleton
@@ -48,17 +49,19 @@ class ProductController @Inject()(val controllerComponents: ControllerComponents
     }
 
     def update(id: Int): Action[JsValue] = Action(parse.json) { request =>
-      request.body.validate[Product].fold(
-        errors => BadRequest(Json.obj("error" -> "Invalid product format")),
-        updatedProduct => {
-          DB.products.indexWhere(_.id == id) match {
-            case -1 => NotFound(Json.obj("error" -> s"Product $id not found"))
-            case idx =>
-              DB.products(idx) = updatedProduct
-              Ok(Json.toJson(updatedProduct))
-          }
-        }
-      )
+
+      DB.products.indexWhere(_.id == id) match {
+        case -1 => NotFound(Json.obj("error" -> s"Product $id not found"))
+        case idx =>
+          request.body.validate[ProductData].fold(
+            errors => BadRequest(Json.obj("error" -> "Invalid product format")),
+            productData => {
+                val updatedProduct = Product(id, productData.name, productData.price, productData.category_id)
+                DB.products(idx) = updatedProduct
+                Ok(Json.toJson(updatedProduct))
+            }
+          )
+      }
     }
 
     def delete(id: Int): Action[AnyContent] = Action {
@@ -66,7 +69,7 @@ class ProductController @Inject()(val controllerComponents: ControllerComponents
         case -1 => NotFound(Json.obj("error" -> s"Product $id not found"))
         case idx =>
           DB.products.remove(idx)
-          NoContent
+          NoContent // 204
       }
     }
 }

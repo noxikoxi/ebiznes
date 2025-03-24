@@ -31,17 +31,18 @@ class CategoryController @Inject()(val controllerComponents: ControllerComponent
     }
 
     def update(id: Int): Action[JsValue] = Action(parse.json) { request =>
-      request.body.validate[Category].fold(
-        errors => BadRequest(Json.obj("error" -> "Invalid product format")),
-        updatedCategory => {
-          DB.categories.indexWhere(_.id == id) match {
-            case -1 => NotFound(Json.obj("error" -> s"Category $id not found"))
-            case idx =>
+      DB.categories.indexWhere(_.id == id) match {
+        case -1 => NotFound(Json.obj("error" -> s"Category $id not found"))
+        case idx =>
+          request.body.validate[CategoryData].fold(
+            errors => BadRequest(Json.obj("error" -> "Invalid category format")),
+            categoryData => {
+              val updatedCategory = Category(id, categoryData.name )
               DB.categories(idx) = updatedCategory
               Ok(Json.toJson(updatedCategory))
-          }
-        }
-      )
+            }
+          )
+      }
     }
 
     def delete(id: Int): Action[AnyContent] = Action {

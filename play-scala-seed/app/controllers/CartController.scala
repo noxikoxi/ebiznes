@@ -4,6 +4,7 @@ import javax.inject.*
 import play.api.libs.json.*
 import play.api.mvc.{Action, *}
 import models.{Cart, DB, Product, CartData, CartItemData}
+import scala.collection.mutable.ListBuffer
 
 
 @Singleton
@@ -46,7 +47,11 @@ class CartController @Inject()(val controllerComponents: ControllerComponents) e
     request.body.validate[CartData].fold(
       errors => BadRequest(Json.obj("error" -> "Invalid cart format")),
       cartData => {
-        val newCart = Cart(DB.nextCartId, cartData.products)
+        val products : ListBuffer[(Int, Int)] = ListBuffer();
+        for(CartItemData(p_id, q) <- cartData.products){
+          products += ((p_id, q))
+        }
+        val newCart = Cart(DB.nextCartId, products)
         DB.nextCartId += 1
         DB.carts += newCart
         Created(Json.toJson(newCart))
@@ -66,8 +71,7 @@ class CartController @Inject()(val controllerComponents: ControllerComponents) e
 
               case idx =>
                 // Produkt istnieje, aktualizujemy ilość
-                val (product_id, oldQuantity) = cart.products(idx)
-                cart.products.update(idx, (product_id, oldQuantity + cartItemData.quantity))
+                cart.products.update(idx, (cartItemData.product_id, cartItemData.quantity))
             }
             Created(Json.toJson(cart))
           }

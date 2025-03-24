@@ -24,8 +24,7 @@ object DB {
       Cart(2, ListBuffer((5, 10), (6, 3))),
     )
 
-  var nextProductId: Int = 7;
-  var nextCategoryId: Int = 4;
-  var nextCartId: Int = 3;
-
+    var nextProductId: Int = 7;
+    var nextCategoryId: Int = 4;
+    var nextCartId: Int = 3;
 }
