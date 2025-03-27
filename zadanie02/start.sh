@@ -1,11 +1,32 @@
 #!/bin/bash
-set -e
+IMAGE="scala-app"
+TAG="latest"
 
-APP_NAME="play-scala-api" 
 
-ngrok config add-authtoken YOUR TOKEN
+if docker images --format "{{.Repository}}:{{.Tag}}" | grep -q -w "^$IMAGE:$TAG"; then
+    echo "Image $IMAGE:$TAG already exists"
+else
+    echo "Building image $IMAGE:$TAG..."
+    docker build -t $IMAGE:$TAG .
+fi
 
-ngrok http http://localhost:9000
+echo "Running container..."
+CONTAINER_ID=$(docker run -d --rm -p 9000:9000 "$IMAGE:$TAG")
 
-./app/bin/$APP_NAME
+if [ -z "$CONTAINER_ID" ]; then
+    echo "Failed to start container"
+    exit 1
+fi
 
+cleanup() {
+    echo "Exit, stopping container $CONTAINER_ID..."
+    docker stop "$CONTAINER_ID"
+    echo "Container stopped"
+}
+
+trap cleanup EXIT
+
+sleep 3
+
+echo "Starting ngrok..."
+ngrok http 9000

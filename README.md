@@ -18,6 +18,8 @@ Link do commita -> https://github.com/noxikoxi/ebiznes/commit/f2ea32575d91c78162
 
 Kod -> https://github.com/noxikoxi/ebiznes/tree/main/zadanie01
 
+Demo -> https://github.com/noxikoxi/ebiznes/blob/main/demos/zadanie01.zip
+
 
 ### Zadanie 02 Scala + Play
 
@@ -27,11 +29,12 @@ Kod -> https://github.com/noxikoxi/ebiznes/tree/main/zadanie01
 
 :white_check_mark: 4.0 kontrolery do Kategorii i Koszyka + CRUD 
 
-:x: 4.5 obraz dockera z aplikacja + skrypt uruchamiający via ngrok
-- brakuje tylko ngrok (w trakcie)
+:white_check_mark: 4.5 obraz dockera z aplikacja + skrypt uruchamiający via ngrok
 
 :white_check_mark: 5.0 konfiguracja CORS dla dwóch hostów dla metod CRUD
 
-Link do commita -> 
+Link do commita -> https://github.com/noxikoxi/ebiznes/commit/08908c405dd7f8b9997bfab6e0ee59edb6f7533e
 
 Kod -> https://github.com/noxikoxi/ebiznes/tree/main/zadanie02
+
+Demo -> https://github.com/noxikoxi/ebiznes/blob/main/demos/zadanie02.zip
