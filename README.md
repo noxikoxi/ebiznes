@@ -38,3 +38,21 @@ Link do commita -> https://github.com/noxikoxi/ebiznes/commit/08908c405dd7f8b999
 Kod -> https://github.com/noxikoxi/ebiznes/tree/main/zadanie02
 
 Demo -> https://github.com/noxikoxi/ebiznes/blob/main/demos/zadanie02.zip
+
+### Zadanie 03 Kotlin + Ktor + Discord Bot
+
+:white_check_mark: 3.0 Należy stworzyć aplikację kliencką w Kotlinie we frameworku Ktor, która pozwala na przesyłanie wiadomości na platformę Discord.
+
+:white_check_mark: 3.5 Aplikacja jest w stanie odbierać wiadomości użytkowników z platformy Discord skierowane do aplikacji (bota).
+
+:white_check_mark: 4.0 Zwróci listę kategorii na określone żądanie użytkownika.
+
+:white_check_mark: 4.5 Zwróci listę produktów wg żądanej kategorii.
+
+:x: 5.0 Aplikacja obsłuży dodatkowo jedną z platform: Slack, Messenger, Webex
+
+Link do commita -> https://github.com/noxikoxi/ebiznes/commit/
+
+Kod -> https://github.com/noxikoxi/ebiznes/tree/main/zadanie03/d6b40f6020c978a16e2a5c3d88be544d04d31b4c
+
+Demo -> https://github.com/noxikoxi/ebiznes/blob/main/demos/zadanie03-kotlin.zip
