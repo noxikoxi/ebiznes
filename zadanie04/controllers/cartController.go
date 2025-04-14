@@ -16,7 +16,6 @@ type CartResponse struct {
 }
 
 type CartItemsResponse struct {
-	ID        uint    `json:"id"`
 	Product   string  `json:"product"`
 	Quantity  uint    `json:"quantity"`
 	TotalCost float32 `json:"total_cost"`
@@ -40,13 +39,13 @@ func GetCarts(c echo.Context) error {
 	var cartResponse []CartResponse
 
 	for _, cart := range carts {
+		totalCost = 0.0
 		var cartItemsResponse []CartItemsResponse
 
 		for _, item := range cart.CartItems {
 			itemCost := float32(item.Quantity) * item.Product.Price
 			totalCost += itemCost
 			cartItemsResponse = append(cartItemsResponse, CartItemsResponse{
-				ID:        item.ID,
 				Product:   item.Product.Name,
 				Quantity:  item.Quantity,
 				TotalCost: itemCost,
@@ -64,7 +63,7 @@ func GetCarts(c echo.Context) error {
 }
 
 func CreateCart(c echo.Context) error {
-	cart := models.Cart{}
+	var cart models.Cart
 	// Pusty koszyk nie potrzebuje żadnych danych
 	result := database.DB.Create(&cart)
 	if result.Error != nil {
@@ -95,7 +94,6 @@ func GetCart(c echo.Context) error {
 		itemCost := float32(item.Quantity) * item.Product.Price
 		totalCost += itemCost
 		cartItemsResponse = append(cartItemsResponse, CartItemsResponse{
-			ID:        item.ID,
 			Product:   item.Product.Name,
 			Quantity:  item.Quantity,
 			TotalCost: float32(item.Quantity) * item.Product.Price,
@@ -139,9 +137,9 @@ func AddCartItem(c echo.Context) error {
 		Quantity:  uint(parsedQuantity),
 	}
 
-	cart := models.Cart{}
+	var cart models.Cart
 
-	result := database.DB.Preload("CartItems.Product").Find(&cart, cartID)
+	result := database.DB.Preload("CartItems.Product").First(&cart, cartID)
 	if result.Error != nil {
 		return c.JSON(http.StatusNotFound, map[string]string{"error": "Cart not found"})
 	}
@@ -180,20 +178,27 @@ func UpdateCartItem(c echo.Context) error {
 	cart := models.Cart{}
 	var cartItem models.CartItem
 
-	result := database.DB.Find(&cart, cartID)
+	result := database.DB.Preload("CartItems").First(&cart, cartID)
 	if result.Error != nil {
 		return c.JSON(http.StatusNotFound, map[string]string{"error": "Cart not found"})
 	}
 
+	productFound := false
+
 	for _, item := range cart.CartItems {
-		if item.Product.ID == cartItem.Product.ID {
-			return c.JSON(http.StatusBadRequest, map[string]string{"error": "Product already exists"})
+		if item.ProductID == uint(parsedProductID) {
+			productFound = true
+			break
 		}
 	}
 
-	result = database.DB.Scopes(scopes.CartID(uint(parsedCartID)), scopes.CartProductID(uint(parsedProductID))).Find(&cartItem)
+	if !productFound {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Product not found"})
+	}
+
+	result = database.DB.Scopes(scopes.CartID(uint(parsedCartID)), scopes.CartProductID(uint(parsedProductID))).First(&cartItem)
 	if result.Error != nil {
-		return c.JSON(http.StatusNotFound, map[string]string{"error": "Cart not found"})
+		return c.JSON(http.StatusNotFound, map[string]string{"error": "Cart Item not found"})
 	}
 
 	cartItem.Quantity = uint(parsedQuantity)
@@ -218,7 +223,7 @@ func DeleteCartItem(c echo.Context) error {
 	}
 
 	cart := models.Cart{}
-	result := database.DB.Find(&cart, cartID)
+	result := database.DB.Preload("CartItems").First(&cart, cartID)
 	if result.Error != nil {
 		return c.JSON(http.StatusNotFound, map[string]string{"error": "Cart not found"})
 	}
@@ -226,7 +231,7 @@ func DeleteCartItem(c echo.Context) error {
 	var cartItem models.CartItem
 
 	for _, item := range cart.CartItems {
-		if item.Product.ID == uint(parsedProductID) {
+		if item.ProductID == uint(parsedProductID) {
 			cartItem = item
 			break
 		}

@@ -125,10 +125,10 @@ func UpdateProduct(c echo.Context) error {
 	database.DB.Save(&existingProduct)
 
 	response := ProductResponse{
-		ID:       product.ID,
-		Name:     product.Name,
-		Price:    product.Price,
-		Category: product.Category.Name,
+		ID:       existingProduct.ID,
+		Name:     existingProduct.Name,
+		Price:    existingProduct.Price,
+		Category: existingProduct.Category.Name,
 	}
 
 	return c.JSON(http.StatusOK, response)
