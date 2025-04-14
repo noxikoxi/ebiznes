@@ -51,8 +51,26 @@ Demo -> https://github.com/noxikoxi/ebiznes/blob/main/demos/zadanie02.zip
 
 :x: 5.0 Aplikacja obsłuży dodatkowo jedną z platform: Slack, Messenger, Webex
 
-Link do commita -> https://github.com/noxikoxi/ebiznes/commit/
+Link do commita -> https://github.com/noxikoxi/ebiznes/commit/ce4ceba7498863f20dfe50db682dc9eae234841c
 
-Kod -> https://github.com/noxikoxi/ebiznes/tree/main/zadanie03/d6b40f6020c978a16e2a5c3d88be544d04d31b4c
+Kod -> https://github.com/noxikoxi/ebiznes/tree/main/zadanie03
 
 Demo -> https://github.com/noxikoxi/ebiznes/blob/main/demos/zadanie03-kotlin.zip
+
+### Zadanie 04 Go + Echo + GORM
+
+:white_check_mark: 3.0 Należy stworzyć aplikację we frameworki echo w j. Go, która będzie miała kontroler Produktów zgodny z CRUD
+
+:white_check_mark: 3.5 Należy stworzyć model Produktów wykorzystując gorm oraz wykorzystać model do obsługi produktów (CRUD) w kontrolerze (zamiast listy)
+
+:white_check_mark: 4.0 Należy dodać model Koszyka oraz dodać odpowiedni endpoint
+
+:white_check_mark: 4.5 Należy stworzyć model kategorii i dodać relację między kategorią, a produktem
+
+:white_check_mark: 5.0 pogrupować zapytania w gorm’owe scope'y
+
+Link do commita -> https://github.com/noxikoxi/ebiznes/commit/0fc59dfb8fa68fa932d472c97722809c7ddb43d4
+
+Kod -> https://github.com/noxikoxi/ebiznes/tree/main/zadanie04
+
+Demo -> https://github.com/noxikoxi/ebiznes/blob/main/demos/zadanie04-go.zip

@@ -3,3 +3,4 @@
 tresc.tex
 .idea/
 .env
+*.db
