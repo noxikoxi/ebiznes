@@ -1,0 +1,21 @@
+version: '3'
+services:
+  frontend:
+    build:
+      context: ./client
+    ports:
+      - "5137:5137"
+    networks:
+      - app-network
+
+  backend:
+    build:
+      context: ./server
+    ports:
+      - "1323:1323"  
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
