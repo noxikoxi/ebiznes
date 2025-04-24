@@ -39,10 +39,12 @@ func main() {
 	database.InitDB(db)
 
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins: []string{"http://localhost:5137"},
 		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
 		AllowMethods: []string{http.MethodGet, http.MethodPost, http.MethodDelete},
 		AllowOriginFunc: func(origin string) (bool, error) {
+			if origin == "http://localhost:5137" {
+				return true, nil
+			}
 			return re.MatchString(origin), nil
 		},
 	}))
