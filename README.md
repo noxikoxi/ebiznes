@@ -92,3 +92,40 @@ Link do commita -> https://github.com/noxikoxi/ebiznes/commit/94dda5219c9774e65a
 Kod -> https://github.com/noxikoxi/ebiznes/tree/main/zadanie05
 
 Demo -> https://github.com/noxikoxi/ebiznes/blob/main/demos/zadanie05-frontend.zip
+
+### Zadanie 06 Selenium, testy
+
+3.0 Należy stworzyć 20 przypadków testowych w CypressJS lub Selenium(Kotlin, Python, Java, JS, Go, Scala)
+
+3.5 Należy rozszerzyć testy funkcjonalne, aby zawierały minimum 50 asercji
+
+4.0 Należy stworzyć testy jednostkowe do wybranego wcześniejszego projektu z minimum 50 asercjami
+
+4.5 Należy dodać testy API, należy pokryć wszystkie endpointy z minimum jednym scenariuszem negatywnym per endpoint
+
+5.0 Należy uruchomić testy funkcjonalne na Browserstacku
+
+Link do commita -> https://github.com/noxikoxi/ebiznes/commit/
+
+Kod -> https://github.com/noxikoxi/ebiznes/tree/main/zadanie06
+
+Demo -> https://github.com/noxikoxi/ebiznes/blob/main/demos/
+
+
+### Zadanie 07 Sonar
+
+:white_check_mark: 3.0 Należy dodać litera do odpowiedniego kodu aplikacji serwerowej w hookach gita
+
+:white_check_mark: 3.5 Należy wyeliminować wszystkie bugi w kodzie w Sonarze (kod aplikacji serwerowej)
+
+:white_check_mark: 4.0 Należy wyeliminować wszystkie zapaszki w kodzie w Sonarze (kod aplikacji serwerowej)
+
+:white_check_mark: 4.5 Należy wyeliminować wszystkie podatności oraz błędy bezpieczeństwa w kodzie w Sonarze (kod aplikacji serwerowej)
+
+:white_check_mark: 5.0 Należy wyeliminować wszystkie błędy oraz zapaszki w kodzie aplikacji klienckiej
+
+Link do repozytorium analizowanego przez Sonar -> https://github.com/noxikoxi/products
+
+Link do commita -> https://github.com/noxikoxi/products/commit/31f2e0867d63cc4ea0e2d1f2a97596af14ae4933
+
+Kod hooka, zrzuty ekrany pokazujące jego działanie i badge w readme -> https://github.com/noxikoxi/ebiznes/tree/main/zadanie07

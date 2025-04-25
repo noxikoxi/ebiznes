@@ -1,0 +1,31 @@
+#!/bin/sh
+
+# custom hooks
+echo "Calling eslint for server and client..."
+cd client
+eslint_result=$(npx eslint .)
+eslint_exit_code=$?
+
+echo "$eslint_result"
+
+if [ "$eslint_exit_code" -eq 0 ]; then
+  	echo "Client has no ESLint issues"
+else
+	echo "ESLint found issues in the client code."
+	exit 1
+fi
+
+cd ..
+cd server
+golangci_lint_result=$(golangci-lint run .)
+golangci_exit_code=$?
+
+echo "$golangci_lint_result"
+if [ "$golangci_exit_code" -eq 0 ]; then
+	echo "Server has no linting issues"
+else
+	echo "GolangCI-lint found issues in the server code."
+	exit 1
+fi
+
+cd ..
