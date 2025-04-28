@@ -2,7 +2,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-from pages.shared import verify_page_title, wait_and_get, get_email_password, get_danger_text, main_page_link, login
+from utils.test_utils import verify_page_title, wait_and_get, get_email_password, get_danger_text, main_page_link, login
 
 
 def get_curr_url(base_url):
@@ -16,17 +16,22 @@ def test_login_without_credentials(driver, base_url):
     assert driver.current_url == base_url + "/login"
 
 
-def test_login_bad_cases(driver, base_url):
+def prepare_test(driver, base_url):
     driver.get(get_curr_url(base_url))
     login_btn = wait_and_get(driver, "button.formButton")
     email, password = get_email_password(driver)
-    assert password.get_attribute("type") == "password"
+    return login_btn, email, password
 
-    email.send_keys("testowy")
+
+def test_login_empty(driver, base_url):
+    login_btn, _, _ = prepare_test(driver, base_url)
     login_btn.click()
     assert driver.current_url == get_curr_url(base_url)
 
-    email, password = get_email_password(driver)
+
+def test_login_bad_email(driver, base_url):
+    login_btn, email, password = prepare_test(driver, base_url)
+    assert password.get_attribute("type") == "password"
     email.send_keys("testowy")
     password.send_keys("testowy")
     login_btn.click()
@@ -35,8 +40,9 @@ def test_login_bad_cases(driver, base_url):
     assert danger.text == "Nieprawidłowy email"
     assert driver.current_url == get_curr_url(base_url)
 
-    login_btn = wait_and_get(driver, "button.formButton")
-    email, password = get_email_password(driver)
+
+def test_invalid_credentials(driver, base_url):
+    login_btn, email, password = prepare_test(driver, base_url)
     email.send_keys("testowy@wp.pl")
     password.send_keys("testowy")
     login_btn.click()
@@ -54,7 +60,7 @@ def test_link(driver, base_url):
     driver.get(get_curr_url(base_url))
     link = wait_and_get(driver, "a.additionalInfo")
     link.click()
-    WebDriverWait(driver, 0.5)
+    WebDriverWait(driver, 4).until(EC.url_to_be(base_url + "/register"))
     assert driver.current_url == base_url + "/register"
 
 
@@ -65,4 +71,5 @@ def test_main_page_link(driver, base_url):
 def test_correct_login(driver, base_url):
     driver.get(get_curr_url(base_url))
     login(driver, base_url)
+    WebDriverWait(driver, 4).until(EC.url_to_be(base_url + "/users/7"))
     assert driver.current_url == base_url + "/users/7"

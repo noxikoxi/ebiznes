@@ -1,4 +1,4 @@
-from pages.shared import verify_page_title, nav_logged, nav_quest
+from utils.test_utils import verify_page_title, nav_logged, nav_quest
 
 
 def get_curr_url(base_url):
@@ -15,4 +15,4 @@ def test_nav_quest(driver, base_url):
 
 
 def test_nav_logged(driver, base_url):
-    nav_logged(driver, base_url, get_curr_url(base_url))
+    nav_logged(driver, base_url)

@@ -1,4 +1,4 @@
 pytest
 pytest-html
 selenium
-pytest-assertions-count
+pytest-assertcount

@@ -1,4 +1,4 @@
-from pages.shared import verify_page_title, get_elements_by_selector
+from utils.test_utils import verify_page_title, get_elements_by_selector
 
 
 def test_title(driver, base_url):

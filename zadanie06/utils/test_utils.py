@@ -53,17 +53,22 @@ def main_page_link(driver, base_url, url):
     assert driver.current_url == base_url + "/", f"URL nie pasuje. Oczekiwano: {base_url}, ale uzyskano: {driver.current_url}"
 
 
-def login(driver, base_url):
+def login(driver, base_url, admin=False):
     driver.get(base_url + "/login")
     login_btn = wait_and_get(driver, "button.formButton")
     email, password = get_email_password(driver)
-    email.send_keys("testowy@wp.pl")
-    password.send_keys("test123")
+    email.clear()
+    password.clear()
+    if admin:
+        email.send_keys("admin")
+        password.send_keys("admin")
+    else:
+        email.send_keys("testowy@wp.pl")
+        password.send_keys("test123")
     login_btn.click()
 
 
-def nav_logged(driver, base_url, url):
-    driver.get(url)
+def nav_logged(driver, base_url):
     login(driver, base_url)
     nav_elements = get_elements_by_selector(driver, "nav ul li")
     assert len(nav_elements) == 4
@@ -72,6 +77,22 @@ def nav_logged(driver, base_url, url):
     third_nav = nav_elements[2]
     fourth_nav = nav_elements[3]
     assert first_nav.text == "Moje Rezerwacje"
+    assert second_nav.text == "Rezerwacje"
+    assert third_nav.text == "Maszyny"
+    assert fourth_nav.text == "Profil"
+    for element in (first_nav, second_nav, third_nav, fourth_nav):
+        assert element.is_enabled() is True
+
+
+def nav_admin(driver, base_url):
+    login(driver, base_url, admin=True)
+    nav_elements = get_elements_by_selector(driver, "nav ul li")
+    assert len(nav_elements) == 4
+    first_nav = nav_elements[0]
+    second_nav = nav_elements[1]
+    third_nav = nav_elements[2]
+    fourth_nav = nav_elements[3]
+    assert first_nav.text == "Użytkownicy"
     assert second_nav.text == "Rezerwacje"
     assert third_nav.text == "Maszyny"
     assert fourth_nav.text == "Profil"
@@ -92,7 +113,7 @@ def nav_quest(driver, url):
 
 
 def get_div_children(driver, parent_div_selector):
+    WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.CSS_SELECTOR, parent_div_selector)))
     parent_div = driver.find_element(By.CSS_SELECTOR, parent_div_selector)
     children = parent_div.find_elements(By.CSS_SELECTOR, "div")  # '>*' oznacza wszystkie bezpośrednie dzieci
-
     return children

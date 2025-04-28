@@ -1,2 +1,3 @@
 #!/bin/bash
-pytest --assert=plain
+pytest .\tests\
+
