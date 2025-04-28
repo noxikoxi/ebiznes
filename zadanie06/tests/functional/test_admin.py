@@ -31,19 +31,19 @@ def test_login(driver, base_url):
 
 def test_users(driver, base_url):
     login(driver, base_url, admin=True)
+    WebDriverWait(driver, 10).until(EC.url_contains("users"))
     driver.get(base_url + "/admin/users")
-    WebDriverWait(driver, 3).until(EC.url_contains("admin"))
-    info = wait_and_get(driver, "p.info")
+    WebDriverWait(driver, 10).until(EC.url_to_be(base_url + "/admin/users"))
+    info = wait_and_get(driver, "p.info.text-lg")
     assert info.text == "Użytkownicy"
     add_user = wait_and_get(driver, "a.button-like")
     add_user.click()
-    WebDriverWait(driver, 3).until(EC.url_contains("create"))
+    WebDriverWait(driver, 5).until(EC.url_contains("create"))
     assert driver.current_url == base_url + "/admin/users/create"
 
 
 def prepare_create_test(driver, base_url):
     login(driver, base_url, admin=True)
-    WebDriverWait(driver, 5).until(EC.url_contains("users"))
     driver.get(base_url + "/admin/users/create")
     WebDriverWait(driver, 3).until(EC.url_contains("create"))
     btn = wait_and_get(driver, "button.formButton")
@@ -85,7 +85,7 @@ def test_create_user_correct(driver, base_url, email_text="correct@wp.pl", passw
 def test_delete_user(driver, base_url, email_text="correct@wp.pl"):
     login(driver, base_url, admin=True)
     driver.get(base_url + "/admin/users")
-    WebDriverWait(driver, 3).until(EC.url_contains("admin"))
+    WebDriverWait(driver, 5).until(EC.url_contains("admin"))
     last_row = get_user_table_row(driver, -1)
     trash = last_row.find_element(By.TAG_NAME, "button")
     trash.click()

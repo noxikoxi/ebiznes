@@ -66,6 +66,7 @@ def login(driver, base_url, admin=False):
         email.send_keys("testowy@wp.pl")
         password.send_keys("test123")
     login_btn.click()
+    WebDriverWait(driver, 10).until(EC.url_contains("users"))
 
 
 def nav_logged(driver, base_url):

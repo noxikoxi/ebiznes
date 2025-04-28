@@ -19,9 +19,8 @@ def driver():
         "credentials_enable_service": False,
         "profile.password_manager_enabled": False,
     })
-    options.add_argument("disable-infobars")
     options.add_argument("--guest")
-    options.add_argument("--headless=new")
+    options.add_argument("--headless")
     driver = webdriver.Chrome(options=options)
     driver.maximize_window()
     yield driver

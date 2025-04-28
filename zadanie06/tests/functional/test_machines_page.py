@@ -35,5 +35,6 @@ def test_content_logged(driver, base_url):
     WebDriverWait(driver, 5).until(EC.url_contains("machines"))
     children = get_div_children(driver, "div.machine-item")
     assert len(children) == 4
-    reservation = driver.find_element(By.CSS_SELECTOR, "div.machine-reserve a")
-    assert reservation
+    reservation = driver.find_element(By.CSS_SELECTOR, "div.machine-reserve")
+    a = reservation.find_element(By.TAG_NAME, "a")
+    assert a
