@@ -73,6 +73,8 @@ func TestGetCart(t *testing.T) {
 	req := httptest.NewRequest(http.MethodGet, "/carts/1", nil)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
+	c.SetParamNames("id")
+	c.SetParamValues("1")
 	err := GetCart(c)
 	assert.NoError(t, err)
 	assert.Equal(t, http.StatusOK, rec.Code)

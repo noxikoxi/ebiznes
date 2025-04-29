@@ -7,6 +7,7 @@ import (
 	"zadanie04/database"
 	"zadanie04/models"
 	"zadanie04/scopes"
+	"zadanie04/utils"
 )
 
 type ProductResponse struct {
@@ -21,7 +22,12 @@ func GetProducts(c echo.Context) error {
 	minPriceStr := c.QueryParam("minPrice")     // np. minPrice=100
 	categoryIDStr := c.QueryParam("categoryID") // np. categoryID=1
 
-	filters := scopes.GetCategoryPriceFilters(minPriceStr, categoryIDStr)
+	minPrice, categoryId, err := utils.ValidateProductsFilters(minPriceStr, categoryIDStr)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid products filters"})
+	}
+
+	filters := scopes.GetCategoryPriceFilters(minPrice, uint(categoryId))
 
 	result := database.DB.Preload("Category").Scopes(filters...).Find(&products)
 	if result.Error != nil {
@@ -42,7 +48,11 @@ func GetProducts(c echo.Context) error {
 }
 
 func GetProduct(c echo.Context) error {
-	id := c.Param("id")
+	id, err := utils.ValidateID(c.Param("id"))
+
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid ID"})
+	}
 	var product models.Product
 	result := database.DB.Preload("Category").First(&product, id)
 	if result.Error != nil {
@@ -104,9 +114,10 @@ func CreateProduct(c echo.Context) error {
 }
 
 func UpdateProduct(c echo.Context) error {
-	id, err := strconv.Atoi(c.Param("id"))
+	id, err := utils.ValidateID(c.Param("id"))
+
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid product ID"})
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid ID"})
 	}
 
 	product := new(models.Product)
@@ -144,14 +155,13 @@ func UpdateProduct(c echo.Context) error {
 }
 
 func DeleteProduct(c echo.Context) error {
-	id := c.Param("id")
+	id, err := utils.ValidateID(c.Param("id"))
 
-	productID, err := strconv.Atoi(id)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid product ID"})
 	}
 
-	result := database.DB.Delete(&models.Product{}, productID)
+	result := database.DB.Delete(&models.Product{}, id)
 	if result.Error != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": result.Error.Error()})
 	}

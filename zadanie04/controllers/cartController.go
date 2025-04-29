@@ -7,6 +7,7 @@ import (
 	"zadanie04/database"
 	"zadanie04/models"
 	"zadanie04/scopes"
+	"zadanie04/utils"
 )
 
 type CartResponse struct {
@@ -79,7 +80,11 @@ func CreateCart(c echo.Context) error {
 }
 
 func GetCart(c echo.Context) error {
-	id := c.Param("id")
+	id, err := utils.ValidateID(c.Param("id"))
+
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid ID"})
+	}
 	cart := models.Cart{}
 
 	result := database.DB.Preload("CartItems.Product").First(&cart, id)
@@ -108,7 +113,11 @@ func GetCart(c echo.Context) error {
 }
 
 func DeleteCart(c echo.Context) error {
-	id := c.Param("id")
+	id, err := utils.ValidateID(c.Param("id"))
+
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid ID"})
+	}
 
 	result := database.DB.Delete(&models.Cart{}, id)
 	if result.Error != nil {
@@ -131,6 +140,12 @@ func AddCartItem(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "cart_id, product_id and quantity have to be uint type"})
 	}
 
+	var product models.Product
+	result := database.DB.First(&product, parsedProductID)
+	if result.Error != nil {
+		return c.JSON(http.StatusNotFound, map[string]string{"error": "Product not found"})
+	}
+
 	cartItem := models.CartItem{
 		CartID:    uint(parsedCartID),
 		ProductID: uint(parsedProductID),
@@ -139,7 +154,7 @@ func AddCartItem(c echo.Context) error {
 
 	var cart models.Cart
 
-	result := database.DB.Preload("CartItems.Product").First(&cart, cartID)
+	result = database.DB.Preload("CartItems.Product").First(&cart, cartID)
 	if result.Error != nil {
 		return c.JSON(http.StatusNotFound, map[string]string{"error": "Cart not found"})
 	}

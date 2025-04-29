@@ -118,6 +118,8 @@ func TestGetProduct(t *testing.T) {
 	req := httptest.NewRequest(http.MethodGet, "/products/1", nil)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
+	c.SetParamNames("id")
+	c.SetParamValues("1")
 	err := GetProduct(c)
 	assert.NoError(t, err)
 	assert.Equal(t, http.StatusOK, rec.Code)

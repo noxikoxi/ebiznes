@@ -6,6 +6,7 @@ import (
 	"zadanie04/database"
 	"zadanie04/models"
 	"zadanie04/scopes"
+	"zadanie04/utils"
 )
 
 type CategoryResponse struct {
@@ -62,7 +63,11 @@ func GetCategories(c echo.Context) error {
 }
 
 func GetCategory(c echo.Context) error {
-	id := c.Param("id")
+	id, err := utils.ValidateID(c.Param("id"))
+
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid ID"})
+	}
 	var category models.Category
 	result := database.DB.First(&category, id)
 	if result.Error != nil {
@@ -78,7 +83,11 @@ func GetCategory(c echo.Context) error {
 }
 
 func UpdateCategory(c echo.Context) error {
-	id := c.Param("id")
+	id, err := utils.ValidateID(c.Param("id"))
+
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid ID"})
+	}
 	category := new(models.Category)
 	if err := c.Bind(category); err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
@@ -107,7 +116,11 @@ func UpdateCategory(c echo.Context) error {
 }
 
 func DeleteCategory(c echo.Context) error {
-	id := c.Param("id")
+	id, err := utils.ValidateID(c.Param("id"))
+
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid ID"})
+	}
 	result := database.DB.Delete(&models.Category{}, id)
 	if result.Error != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": result.Error.Error()})
