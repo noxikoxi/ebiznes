@@ -3,6 +3,7 @@ package controllers
 import (
 	"github.com/labstack/echo/v4"
 	"net/http"
+	"strconv"
 	"zadanie04/database"
 	"zadanie04/models"
 	"zadanie04/scopes"
@@ -103,14 +104,18 @@ func CreateProduct(c echo.Context) error {
 }
 
 func UpdateProduct(c echo.Context) error {
-	id := c.Param("id")
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid product ID"})
+	}
+
 	product := new(models.Product)
 	if err := c.Bind(product); err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
 	}
 
-	if product.Name == "" || product.Price == 0 {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Product name cannot be empty and price cannot be 0"})
+	if product.Name == "" || product.Price == 0 || product.CategoryID == 0 {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Product name cannot be empty, price and categoryID cannot be 0"})
 	}
 
 	var existingProduct models.Product
@@ -121,14 +126,18 @@ func UpdateProduct(c echo.Context) error {
 
 	existingProduct.Name = product.Name
 	existingProduct.Price = product.Price
+	existingProduct.CategoryID = product.CategoryID
+	existingProduct.Category = models.Category{}
 
-	database.DB.Save(&existingProduct)
+	if err := database.DB.Save(&existingProduct).Error; err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+	}
 
 	response := ProductResponse{
 		ID:       existingProduct.ID,
 		Name:     existingProduct.Name,
 		Price:    existingProduct.Price,
-		Category: existingProduct.Category.Name,
+		Category: strconv.Itoa(int(existingProduct.CategoryID)),
 	}
 
 	return c.JSON(http.StatusOK, response)
@@ -136,9 +145,19 @@ func UpdateProduct(c echo.Context) error {
 
 func DeleteProduct(c echo.Context) error {
 	id := c.Param("id")
-	result := database.DB.Delete(&models.Product{}, id)
+
+	productID, err := strconv.Atoi(id)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid product ID"})
+	}
+
+	result := database.DB.Delete(&models.Product{}, productID)
 	if result.Error != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": result.Error.Error()})
+	}
+
+	if result.RowsAffected == 0 {
+		return c.JSON(http.StatusNotFound, map[string]string{"error": "Product not found"})
 	}
 
 	return c.JSON(http.StatusNoContent, nil)
