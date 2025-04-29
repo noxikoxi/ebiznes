@@ -95,21 +95,19 @@ Demo -> https://github.com/noxikoxi/ebiznes/blob/main/demos/zadanie05-frontend.z
 
 ### Zadanie 06 Selenium, testy
 
-3.0 Należy stworzyć 20 przypadków testowych w CypressJS lub Selenium(Kotlin, Python, Java, JS, Go, Scala)
+:white_check_mark: 3.0 Należy stworzyć 20 przypadków testowych w CypressJS lub Selenium(Kotlin, Python, Java, JS, Go, Scala)
 
-3.5 Należy rozszerzyć testy funkcjonalne, aby zawierały minimum 50 asercji
+:white_check_mark: 3.5 Należy rozszerzyć testy funkcjonalne, aby zawierały minimum 50 asercji
 
-4.0 Należy stworzyć testy jednostkowe do wybranego wcześniejszego projektu z minimum 50 asercjami
+:white_check_mark: 4.0 Należy stworzyć testy jednostkowe do wybranego wcześniejszego projektu z minimum 50 asercjami
 
 4.5 Należy dodać testy API, należy pokryć wszystkie endpointy z minimum jednym scenariuszem negatywnym per endpoint
 
 5.0 Należy uruchomić testy funkcjonalne na Browserstacku
 
-Link do commita -> https://github.com/noxikoxi/ebiznes/commit/
+Link do readme odnośnie zadania -> https://github.com/noxikoxi/ebiznes/blob/main/zadanie06/readme.md
 
 Kod -> https://github.com/noxikoxi/ebiznes/tree/main/zadanie06
-
-Demo -> https://github.com/noxikoxi/ebiznes/blob/main/demos/
 
 
 ### Zadanie 07 Sonar

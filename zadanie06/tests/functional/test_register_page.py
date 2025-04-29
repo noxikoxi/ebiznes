@@ -1,3 +1,5 @@
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from utils.test_utils import verify_page_title, wait_and_get, get_email_password, get_danger_text, main_page_link
 
 
@@ -64,13 +66,15 @@ def test_register_existing_user(driver, base_url):
 def test_main_page_link(driver, base_url):
     main_page_link(driver, base_url, get_curr_url(base_url))
 
-# def test_register_correct(driver, base_url):
-#     driver.get(get_curr_url(base_url))
-#     register_btn = wait_and_get(driver, "button")
-#     login, password = get_email_password(driver)
-#
-#     login.send_keys("testowy123@wp.pl")
-#     password.send_keys("testowyPassword")
-#     register_btn.click()
-#
-#     assert driver.current_url == base_url + "/login"
+
+def test_register_correct(driver, base_url):
+    driver.get(get_curr_url(base_url))
+    register_btn = wait_and_get(driver, "button")
+    login, password = get_email_password(driver)
+
+    login.send_keys("testowy123@wp.pl")
+    password.send_keys("testowyPassword")
+    register_btn.click()
+    WebDriverWait(driver, 5).until(EC.url_contains("login"))
+
+    assert driver.current_url == base_url + "/login"
