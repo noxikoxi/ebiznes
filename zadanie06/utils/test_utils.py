@@ -3,7 +3,6 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 
-
 def verify_page_title(driver, expected_title):
     """Sprawdza, czy tytuł strony jest poprawny."""
     actual_title = driver.title
@@ -77,10 +76,9 @@ def nav_logged(driver, base_url):
     second_nav = nav_elements[1]
     third_nav = nav_elements[2]
     fourth_nav = nav_elements[3]
-    assert first_nav.text == "Moje Rezerwacje"
-    assert second_nav.text == "Rezerwacje"
-    assert third_nav.text == "Maszyny"
-    assert fourth_nav.text == "Profil"
+    labels = ("Moje Rezerwacje", "Rezerwacje", "Maszyny", "Profil")
+    for idx, element in enumerate((first_nav, second_nav, third_nav, fourth_nav)):
+        assert element.text == labels[idx]
     for element in (first_nav, second_nav, third_nav, fourth_nav):
         assert element.is_enabled() is True
 
@@ -93,10 +91,9 @@ def nav_admin(driver, base_url):
     second_nav = nav_elements[1]
     third_nav = nav_elements[2]
     fourth_nav = nav_elements[3]
-    assert first_nav.text == "Użytkownicy"
-    assert second_nav.text == "Rezerwacje"
-    assert third_nav.text == "Maszyny"
-    assert fourth_nav.text == "Profil"
+    labels = ("Użytkownicy", "Rezerwacje", "Maszyny", "Profil")
+    for idx, element in enumerate((first_nav, second_nav, third_nav, fourth_nav)):
+        assert element.text == labels[idx]
     for element in (first_nav, second_nav, third_nav, fourth_nav):
         assert element.is_enabled() is True
 
@@ -106,11 +103,13 @@ def nav_quest(driver, url):
     nav_elements = get_elements_by_selector(driver, "nav ul li")
     assert len(nav_elements) == 2
     first_nav = nav_elements[0]
+    first_nav = nav_elements[0]
     second_nav = nav_elements[1]
-    assert first_nav.text == "Rezerwacje"
-    assert second_nav.text == "Maszyny"
-    assert first_nav.is_enabled() is True
-    assert second_nav.is_enabled() is True
+    labels = ("Rezerwacje", "Maszyny")
+    for idx, element in enumerate((first_nav, second_nav)):
+        assert element.text == labels[idx]
+    for element in (first_nav, second_nav):
+        assert element.is_enabled() is True
 
 
 def get_div_children(driver, parent_div_selector):

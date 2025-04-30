@@ -3,3 +3,4 @@ pytest-html
 selenium
 pytest-assertcount
 requests
+browserstack-sdk
