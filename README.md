@@ -103,7 +103,7 @@ Demo -> https://github.com/noxikoxi/ebiznes/blob/main/demos/zadanie05-frontend.z
 
 :white_check_mark: 4.5 Należy dodać testy API, należy pokryć wszystkie endpointy z minimum jednym scenariuszem negatywnym per endpoint
 
-5.0 Należy uruchomić testy funkcjonalne na Browserstacku
+:white_check_mark: 5.0 Należy uruchomić testy funkcjonalne na Browserstacku
 
 Link do readme odnośnie zadania -> https://github.com/noxikoxi/ebiznes/blob/main/zadanie06/readme.md
 

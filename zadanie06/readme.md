@@ -39,3 +39,5 @@ Jeżeli będzie ustawiona na *True* to testy zostaną wykonane lokalnie.
 Link do testów na browserstack:
 - https://automate.browserstack.com/dashboard/v2/public-build/UXlPb1Qvd0V6TFJHa0tmaXBneFBHSlhYVFBraFJQclp6UEU4dExqeXZDVzdJc2tmS3NvRDU5Z0xneVJhVm5hT3lEam9WOXcyczB1d0Q5TzE3dSsxUXc9PS0tMzhzT2dYSW1lbXJsSURpaEpreHNGZz09--de46f799f0295f07b768eb0268d93fa026650b03
 
+Końcowy commit zadania:
+- https://github.com/noxikoxi/ebiznes/commit/6258a018ac7382ba6cbdbb1a39d251773e06e065
