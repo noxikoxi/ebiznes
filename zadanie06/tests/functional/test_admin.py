@@ -25,7 +25,7 @@ def test_navigation(driver, base_url):
 def test_login(driver, base_url):
     login(driver, base_url, admin=True)
     driver.get(base_url + "/admin/users")
-    WebDriverWait(driver, 3).until(EC.url_contains("admin"))
+    WebDriverWait(driver, 10).until(EC.url_contains("admin"))
     assert driver.current_url == base_url + "/admin/users"
 
 
@@ -38,14 +38,14 @@ def test_users(driver, base_url):
     assert info.text == "Użytkownicy"
     add_user = wait_and_get(driver, "a.button-like")
     add_user.click()
-    WebDriverWait(driver, 5).until(EC.url_contains("create"))
+    WebDriverWait(driver, 10).until(EC.url_contains("create"))
     assert driver.current_url == base_url + "/admin/users/create"
 
 
 def prepare_create_test(driver, base_url):
     login(driver, base_url, admin=True)
     driver.get(base_url + "/admin/users/create")
-    WebDriverWait(driver, 3).until(EC.url_contains("create"))
+    WebDriverWait(driver, 10).until(EC.url_contains("create"))
     btn = wait_and_get(driver, "button.formButton")
     email, password = get_create_user_inputs(driver)
     return btn, email, password
@@ -54,7 +54,7 @@ def prepare_create_test(driver, base_url):
 def test_create_users_empty(driver, base_url):
     btn, _, _ = prepare_create_test(driver, base_url)
     btn.click()
-    dangers = WebDriverWait(driver, 5).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, "p.danger")))
+    dangers = WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, "p.danger")))
     assert len(dangers) == 2
     assert dangers[0].text == "Nieprawidłowy email"
     assert dangers[1].text == "Hasło musi mieć przynajmniej 6 znaków"
@@ -74,7 +74,7 @@ def test_create_user_correct(driver, base_url, email_text="correct@wp.pl", passw
     email.send_keys(email_text)
     password.send_keys(password_text)
     btn.click()
-    WebDriverWait(driver, 5).until(EC.url_to_be(base_url + "/admin/users"))
+    WebDriverWait(driver, 10).until(EC.url_to_be(base_url + "/admin/users"))
 
     assert driver.current_url == base_url + "/admin/users"
     last_row = get_user_table_row(driver, -1)
@@ -82,17 +82,34 @@ def test_create_user_correct(driver, base_url, email_text="correct@wp.pl", passw
     assert email.text == email_text
 
 
+def test_create_user_already_exists(driver, base_url, email_text="correct@wp.pl", password_text="correct1234"):
+    btn, email, password = prepare_create_test(driver, base_url)
+    email.send_keys(email_text)
+    password.send_keys(password_text)
+    btn.click()
+    WebDriverWait(driver, 10).until(EC.url_to_be(base_url + "/admin/users/create"))
+
+    assert driver.current_url == base_url + "/admin/users/create"
+    p = get_danger_text(driver)
+    assert p.text == "Użytkownik o takim adresie email już istnieje"
+
+
 def test_delete_user(driver, base_url, email_text="correct@wp.pl"):
     login(driver, base_url, admin=True)
     driver.get(base_url + "/admin/users")
-    WebDriverWait(driver, 5).until(EC.url_contains("admin"))
-    last_row = get_user_table_row(driver, -1)
-    trash = last_row.find_element(By.TAG_NAME, "button")
-    trash.click()
-    WebDriverWait(driver, 5).until(EC.alert_is_present())
+    WebDriverWait(driver, 10).until(EC.url_contains("admin"))
+    initial_rows_count = len(driver.find_elements(By.CSS_SELECTOR, "table tbody tr"))
+
+    # przycisk
+    driver.find_elements(By.CSS_SELECTOR, "table tbody tr")[-1].find_element(By.TAG_NAME, "button").click()
+
+    WebDriverWait(driver, 10).until(EC.alert_is_present())
     alert = Alert(driver)
     alert.accept()
 
-    last_row = get_user_table_row(driver, -1)
-    email = last_row.find_elements(By.TAG_NAME, "td")[3]
+    # czekam aż liczba wierszy się zmniejszy
+    WebDriverWait(driver, 10).until(
+        lambda d: len(d.find_elements(By.CSS_SELECTOR, "table tbody tr")) < initial_rows_count
+    )
+    email = get_user_table_row(driver, -1).find_elements(By.TAG_NAME, "td")[3]
     assert email.text != email_text

@@ -3,9 +3,11 @@ package controllers
 import (
 	"github.com/labstack/echo/v4"
 	"net/http"
+	"strconv"
 	"zadanie04/database"
 	"zadanie04/models"
 	"zadanie04/scopes"
+	"zadanie04/utils"
 )
 
 type ProductResponse struct {
@@ -20,7 +22,12 @@ func GetProducts(c echo.Context) error {
 	minPriceStr := c.QueryParam("minPrice")     // np. minPrice=100
 	categoryIDStr := c.QueryParam("categoryID") // np. categoryID=1
 
-	filters := scopes.GetCategoryPriceFilters(minPriceStr, categoryIDStr)
+	minPrice, categoryId, err := utils.ValidateProductsFilters(minPriceStr, categoryIDStr)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid products filters"})
+	}
+
+	filters := scopes.GetCategoryPriceFilters(minPrice, uint(categoryId))
 
 	result := database.DB.Preload("Category").Scopes(filters...).Find(&products)
 	if result.Error != nil {
@@ -41,7 +48,11 @@ func GetProducts(c echo.Context) error {
 }
 
 func GetProduct(c echo.Context) error {
-	id := c.Param("id")
+	id, err := utils.ValidateID(c.Param("id"))
+
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid ID"})
+	}
 	var product models.Product
 	result := database.DB.Preload("Category").First(&product, id)
 	if result.Error != nil {
@@ -103,14 +114,19 @@ func CreateProduct(c echo.Context) error {
 }
 
 func UpdateProduct(c echo.Context) error {
-	id := c.Param("id")
+	id, err := utils.ValidateID(c.Param("id"))
+
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid ID"})
+	}
+
 	product := new(models.Product)
 	if err := c.Bind(product); err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
 	}
 
-	if product.Name == "" || product.Price == 0 {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Product name cannot be empty and price cannot be 0"})
+	if product.Name == "" || product.Price == 0 || product.CategoryID == 0 {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Product name cannot be empty, price and categoryID cannot be 0"})
 	}
 
 	var existingProduct models.Product
@@ -121,24 +137,37 @@ func UpdateProduct(c echo.Context) error {
 
 	existingProduct.Name = product.Name
 	existingProduct.Price = product.Price
+	existingProduct.CategoryID = product.CategoryID
+	existingProduct.Category = models.Category{}
 
-	database.DB.Save(&existingProduct)
+	if err := database.DB.Save(&existingProduct).Error; err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+	}
 
 	response := ProductResponse{
 		ID:       existingProduct.ID,
 		Name:     existingProduct.Name,
 		Price:    existingProduct.Price,
-		Category: existingProduct.Category.Name,
+		Category: strconv.Itoa(int(existingProduct.CategoryID)),
 	}
 
 	return c.JSON(http.StatusOK, response)
 }
 
 func DeleteProduct(c echo.Context) error {
-	id := c.Param("id")
+	id, err := utils.ValidateID(c.Param("id"))
+
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid product ID"})
+	}
+
 	result := database.DB.Delete(&models.Product{}, id)
 	if result.Error != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": result.Error.Error()})
+	}
+
+	if result.RowsAffected == 0 {
+		return c.JSON(http.StatusNotFound, map[string]string{"error": "Product not found"})
 	}
 
 	return c.JSON(http.StatusNoContent, nil)

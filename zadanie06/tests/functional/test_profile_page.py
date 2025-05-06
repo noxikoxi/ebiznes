@@ -17,7 +17,7 @@ def test_title_and_logout(driver, base_url):
     logout_btn = wait_and_get(driver, "a.logout-button")
     verify_page_title(driver, "Profil")
     logout_btn.click()
-    WebDriverWait(driver, 3).until(
+    WebDriverWait(driver, 10).until(
         EC.url_to_be(base_url + "/login")
     )
     assert driver.current_url == base_url + "/login"
@@ -50,6 +50,9 @@ def test_profile_correct(driver, base_url):
     surname.send_keys("SURNAME")
     address.send_keys("ADDRESS")
     save.click()
+    WebDriverWait(driver, 10).until(
+        lambda d: get_profile_inputs(d)[0].get_attribute("value") == "NAME"
+    )
     name, surname, phone, address, email = get_profile_inputs(driver)
     assert name.get_attribute("value") == "NAME"
     assert surname.get_attribute("value") == "SURNAME"

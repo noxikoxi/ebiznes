@@ -1,1 +1,4 @@
-report_tests.html
+report.html
+browserstack.yml
+*.log
+*.json

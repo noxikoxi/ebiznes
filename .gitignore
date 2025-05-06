@@ -4,3 +4,4 @@ tresc.tex
 .idea/
 .env
 __pycache__/
+*.exe

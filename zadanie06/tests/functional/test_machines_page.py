@@ -32,7 +32,7 @@ def test_content_quest(driver, base_url):
 def test_content_logged(driver, base_url):
     login(driver, base_url)
     driver.get(get_curr_url(base_url))
-    WebDriverWait(driver, 5).until(EC.url_contains("machines"))
+    WebDriverWait(driver, 10).until(EC.url_contains("machines"))
     children = get_div_children(driver, "div.machine-item")
     assert len(children) == 4
     reservation = driver.find_element(By.CSS_SELECTOR, "div.machine-reserve")

@@ -60,7 +60,7 @@ def test_link(driver, base_url):
     driver.get(get_curr_url(base_url))
     link = wait_and_get(driver, "a.additionalInfo")
     link.click()
-    WebDriverWait(driver, 4).until(EC.url_to_be(base_url + "/register"))
+    WebDriverWait(driver, 10).until(EC.url_to_be(base_url + "/register"))
     assert driver.current_url == base_url + "/register"
 
 
@@ -71,5 +71,5 @@ def test_main_page_link(driver, base_url):
 def test_correct_login(driver, base_url):
     driver.get(get_curr_url(base_url))
     login(driver, base_url)
-    WebDriverWait(driver, 4).until(EC.url_to_be(base_url + "/users/7"))
+    WebDriverWait(driver, 10).until(EC.url_to_be(base_url + "/users/7"))
     assert driver.current_url == base_url + "/users/7"
