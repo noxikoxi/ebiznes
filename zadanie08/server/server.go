@@ -54,6 +54,7 @@ func main() {
 	routers.LoginRoutes(e)
 	routers.UserRoutes(e)
 	routers.GoogleRoutes(e)
+	routers.GithubRoutes(e)
 
 	e.Logger.Fatal(e.Start(":1323"))
 }

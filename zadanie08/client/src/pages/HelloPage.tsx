@@ -22,7 +22,7 @@ export default function HelloPage() {
                                 <span className="text-xl"><span className="text-stone-50 font-bold ">Email:</span> {user.email}</span>
                                 <span className="text-xl"><span className="text-stone-50 font-bold ">Imię:</span> {user.name}</span>
                                 <span className="text-xl"><span className="text-stone-50 font-bold ">Nazwisko:</span> {user.surname}</span>
-                                <span className="text-xl"><span className="text-stone-50 font-bold ">Token:</span> {user.token.slice(0, 10)}...</span>
+                                {user.token && <span className="text-xl"><span className="text-stone-50 font-bold ">Token:</span> {user.token.slice(0, 10)}...</span>}
                             </div>
                             <button
                                 onClick={handleLogout}

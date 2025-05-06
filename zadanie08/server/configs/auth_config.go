@@ -2,11 +2,13 @@ package configs
 
 import (
 	"golang.org/x/oauth2"
+	"golang.org/x/oauth2/github"
 	"golang.org/x/oauth2/google"
 	"os"
 )
 
 var GoogleOauth2Config *oauth2.Config
+var GithubOauth2Config *oauth2.Config
 
 func InitAuthConfig() {
 	clientID := os.Getenv("GOOGLE_CLIENT_ID")
@@ -20,5 +22,18 @@ func InitAuthConfig() {
 			"profile",
 		},
 		Endpoint: google.Endpoint,
+	}
+
+	githubClientID := os.Getenv("GITHUB_CLIENT_ID")
+	githubClientSecret := os.Getenv("GITHUB_CLIENT_SECRET")
+	GithubOauth2Config = &oauth2.Config{
+		ClientID:     githubClientID,
+		ClientSecret: githubClientSecret,
+		RedirectURL:  "http://localhost:1323/github/callback",
+		Scopes: []string{
+			"read:user",
+			"user:email",
+		},
+		Endpoint: github.Endpoint,
 	}
 }

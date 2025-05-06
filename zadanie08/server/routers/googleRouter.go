@@ -8,5 +8,4 @@ import (
 func GoogleRoutes(e *echo.Echo) {
 	e.GET("/google/login", controllers.HandleGoogleLogin)
 	e.GET("/google/callback", controllers.HandleGoogleCallback)
-
 }

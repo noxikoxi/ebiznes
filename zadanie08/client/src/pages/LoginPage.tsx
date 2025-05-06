@@ -52,6 +52,16 @@ export default function LoginPage() {
             });
     }
 
+    const handleGithubButton = () => {
+        axios.get("http://localhost:1323/github/login", {withCredentials: true})
+            .then(response => {
+                window.location.href = response.data;
+            })
+            .catch(error => {
+                console.error("Error during Github login", error);
+            });
+    }
+
     if (userLoading) return <div>Ładowanie...</div>;
 
     return (
@@ -103,7 +113,10 @@ export default function LoginPage() {
                         >
                             Google
                         </button>
-                        <button className="bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-900 cursor-pointer">
+                        <button
+                            className="bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-900 cursor-pointer"
+                            onClick={() => handleGithubButton()}
+                        >
                             GitHub
                         </button>
                     </div>

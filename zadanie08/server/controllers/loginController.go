@@ -57,7 +57,7 @@ func LoginUser(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusUnauthorized, map[string]string{"error": "Invalid credentials"})
 	}
-	
+
 	err = CreateSession(c, user)
 	if err != nil {
 		return err
@@ -74,8 +74,5 @@ func Logout(c echo.Context) error {
 		fmt.Println("Failed to destroy session")
 		return err
 	}
-
-	fmt.Println("WYLGOOWANO")
-
 	return c.String(http.StatusOK, "Wylogowano.")
 }

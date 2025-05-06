@@ -11,54 +11,85 @@ import (
 	"gorm.io/gorm"
 	"log"
 	"net/http"
+	"strings"
+	"time"
 	"zadanie08/configs"
 	"zadanie08/database"
 	"zadanie08/models"
 	"zadanie08/utils"
 )
 
-var oauthStateString = "randomString"
+var oauthStateStringGithub = "randomStringGithub"
 
 // generuje url do logowania do google
-func HandleGoogleLogin(c echo.Context) error {
-	url := configs.GoogleOauth2Config.AuthCodeURL(oauthStateString, oauth2.AccessTypeOffline)
+func HandleGithubLogin(c echo.Context) error {
+	url := configs.GithubOauth2Config.AuthCodeURL(oauthStateString, oauth2.AccessTypeOffline)
 	return c.JSON(http.StatusOK, url)
 }
 
-// odbiera token od google
-func HandleGoogleCallback(c echo.Context) error {
+func HandleGithubCallback(c echo.Context) error {
 	code := c.QueryParam("code")
 	if code == "" {
 		return c.String(http.StatusBadRequest, "Code not found")
 	}
 
-	// Wymiana kodu na token dostępu
-	token, err := configs.GoogleOauth2Config.Exchange(context.Background(), code)
+	// Wymiana kodu na token dostępu GitHub
+	token, err := configs.GithubOauth2Config.Exchange(context.Background(), code)
 	if err != nil {
-		log.Printf("Error exchanging code for token: %v", err)
-		return c.String(http.StatusInternalServerError, "Failed to exchange code for token")
+		log.Printf("Error exchanging code for GitHub token: %v", err)
+		return c.String(http.StatusInternalServerError, "Failed to exchange code for GitHub token")
 	}
-
-	client := configs.GoogleOauth2Config.Client(context.Background(), token)
-	resp, err := client.Get("https://www.googleapis.com/oauth2/v2/userinfo")
+	client := configs.GithubOauth2Config.Client(context.Background(), token)
+	resp, err := client.Get("https://api.github.com/user")
 	if err != nil {
-		log.Printf("Error getting user info: %v", err)
-		return c.String(http.StatusInternalServerError, "Failed to get user info")
+		log.Printf("Error getting GitHub user info: %v", err)
+		return c.String(http.StatusInternalServerError, "Failed to get GitHub user info")
 	}
 	defer resp.Body.Close()
 
 	var userInfo map[string]interface{}
 	if err := json.NewDecoder(resp.Body).Decode(&userInfo); err != nil {
-		log.Printf("Error decoding user info: %v", err)
-		return c.String(http.StatusInternalServerError, "Failed to decode user info")
+		log.Printf("Error decoding GitHub user info: %v", err)
+		return c.String(http.StatusInternalServerError, "Failed to decode GitHub user info")
 	}
 
-	email, _ := userInfo["email"].(string)
-	givenName, _ := userInfo["given_name"].(string)
-	familyName, _ := userInfo["family_name"].(string)
+	name, _ := userInfo["name"].(string)
+	parts := strings.Split(name, " ")
+	surname := ""
+	if len(parts) >= 2 {
+		surname = strings.Join(parts[1:], " ")
+	}
+	resp, err = client.Get("https://api.github.com/user/emails")
+	if err != nil {
+		log.Println("Email fetch error:", err)
+		return c.String(http.StatusInternalServerError, "Failed to get GitHub user emails")
+	}
+	defer resp.Body.Close()
+
+	var emails []struct {
+		Email    string `json:"email"`
+		Primary  bool   `json:"primary"`
+		Verified bool   `json:"verified"`
+	}
+	if err := json.NewDecoder(resp.Body).Decode(&emails); err != nil {
+		log.Println("Email parse error:", err)
+		return c.String(http.StatusInternalServerError, "Failed to decode GitHub user emails")
+	}
+
+	var primaryEmail string
+	for _, emailInfo := range emails {
+		if emailInfo.Primary {
+			primaryEmail = emailInfo.Email
+			break
+		}
+	}
+
+	if primaryEmail == "" {
+		primaryEmail = emails[0].Email
+	}
 
 	var existingUser models.User
-	result := database.DB.Preload("Tokens").Where("email = ?", email).First(&existingUser)
+	result := database.DB.Preload("Tokens").Where("email = ?", primaryEmail).First(&existingUser)
 
 	if result.Error == nil {
 		err := CreateSession(c, existingUser)
@@ -71,7 +102,7 @@ func HandleGoogleCallback(c echo.Context) error {
 			return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to generate JWT"})
 		}
 
-		database.DB.Model(&existingUser.Tokens).Updates(map[string]interface{}{"JWT": jwtToken, "GoogleAccessToken": token.AccessToken, "GoogleTokenExpires": token.Expiry})
+		database.DB.Model(&existingUser.Tokens).Updates(map[string]interface{}{"JWT": jwtToken, "GithubAccessToken": token.AccessToken, "GithubTokenExpires": time.Now().Add(8 * time.Hour)})
 
 		sess, _ := session.Get("session", c)
 		sess.Values["authToken"] = jwtToken
@@ -84,15 +115,15 @@ func HandleGoogleCallback(c echo.Context) error {
 	} else if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		// User does not exist, create a new one
 		newUser := models.User{
-			Email:    email,
-			Name:     givenName,
-			Surname:  familyName,
+			Email:    primaryEmail,
+			Name:     name,
+			Surname:  surname,
 			Password: "",
 		}
 		result := database.DB.Create(&newUser)
 		if result.Error != nil {
 			log.Printf("Błąd podczas tworzenia użytkownika: %v", result.Error)
-			return c.String(http.StatusInternalServerError, "Nie udało się utworzyć użytkownika")
+			return c.String(http.StatusInternalServerError, "Failed to create user")
 		}
 
 		jwtToken, err := utils.GenerateJWT(existingUser.ID, existingUser.Email, existingUser.Name)
@@ -102,8 +133,8 @@ func HandleGoogleCallback(c echo.Context) error {
 		// Optionally create tokens record
 		database.DB.Create(&models.Tokens{
 			UserID:             newUser.ID,
-			GoogleAccessToken:  token.AccessToken,
-			GoogleTokenExpires: token.Expiry,
+			GithubAccessToken:  token.AccessToken,
+			GithubTokenExpires: time.Now().Add(8 * time.Hour),
 			JWT:                jwtToken,
 		})
 
