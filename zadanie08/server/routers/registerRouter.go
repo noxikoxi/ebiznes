@@ -6,5 +6,5 @@ import (
 )
 
 func RegisterRoutes(e *echo.Echo) {
-	e.POST("/users", controllers.RegisterUser)
+	e.POST("/register", controllers.RegisterUser)
 }

@@ -1,20 +1,45 @@
 import { useState } from 'react';
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
+import axios from "axios";
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [error, setError] = useState<string | null>(null)
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        // tutaj wyślij dane logowania do backendu
-        console.log({ email, password });
+        setError(null)
+        setLoading(true)
+        const userData = {
+            email,
+            password
+        };
+        try {
+            const response = await axios.post('http://localhost:1323/login', userData);
+            const responseData: { email: string, name: string, surname: string } = response.data;
+            navigate("/hello", {state: responseData});
+        } catch (error: any) {
+            if (error.response) {
+                setError(error.response.data.error || `HTTP error! status: ${error.response.status}`);
+            } else if (error.request) {
+                setError('No response from server');
+            } else {
+                setError(error.message || 'An error occurred');
+            }
+            console.error('Axios error:', error);
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-dark-900">
             <div className="bg-gray-700 p-8 rounded-2xl shadow-md w-full max-w-md">
                 <h2 className="text-2xl font-bold mb-6 text-center">Zaloguj się</h2>
+                {error && <p className="text-md text-red-400 font-bold">Error: {error}</p>}
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
                         <label htmlFor="email" className="block mb-1 font-medium">Email</label>
@@ -41,6 +66,7 @@ export default function LoginPage() {
                     <button
                         type="submit"
                         className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors cursor-pointer"
+                        disabled={loading}
                     >
                         Zaloguj się
                     </button>
