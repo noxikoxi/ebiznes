@@ -4,7 +4,8 @@ import axios from "axios";
 export interface UserData {
     email : string,
     name: string,
-    surname: string
+    surname: string,
+    token: string,
 }
 
 export const useAuth = () => {
@@ -16,7 +17,9 @@ export const useAuth = () => {
             .then(res => {
                 setUser(res.data)
             })
-            .catch(() => setUser(null))
+            .catch(() => {
+                setUser(null);
+            })
             .finally(() => setLoading(false));
     }, []);
 

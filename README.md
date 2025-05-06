@@ -127,3 +127,19 @@ Link do repozytorium analizowanego przez Sonar -> https://github.com/noxikoxi/pr
 Link do commita -> https://github.com/noxikoxi/products/commit/31f2e0867d63cc4ea0e2d1f2a97596af14ae4933
 
 Kod hooka, zrzuty ekrany pokazujące jego działanie i badge w readme -> https://github.com/noxikoxi/ebiznes/tree/main/zadanie07
+
+### Zadanie 08 OAuth2
+
+:white_check_mark: 3.0 logowanie przez aplikację serwerową (bez Oauth2)
+
+:white_check_mark: 3.5 rejestracja przez aplikację serwerową (bez Oauth2)
+
+:white_check_mark: 4.0 logowanie via Google OAuth2
+
+:white_check_mark: 4.5 logowanie via Facebook lub Github OAuth2
+
+:white_check_mark: 5.0 zapisywanie danych logowania OAuth2 po stronie serwera
+
+Link do commita -> https://github.com/noxikoxi/products
+
+Kod -> https://github.com/noxikoxi/ebiznes/tree/main/zadanie08

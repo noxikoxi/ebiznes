@@ -52,6 +52,7 @@ func RegisterUser(c echo.Context) error {
 		Name:     userRequest.Name,
 		Surname:  userRequest.Surname,
 		Password: hashedPassword,
+		GoogleID: "",
 	}
 	result = database.DB.Create(&newUser)
 	if result.Error != nil {

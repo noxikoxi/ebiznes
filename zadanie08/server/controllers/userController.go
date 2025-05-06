@@ -8,10 +8,11 @@ import (
 
 func GetUserData(c echo.Context) error {
 	sess, _ := session.Get("session", c)
-	
+
 	email := sess.Values["email"]
 	name := sess.Values["name"]
 	surname := sess.Values["surname"]
+	token := sess.Values["authToken"]
 
 	if email == nil {
 		return c.String(http.StatusUnauthorized, "Brak sesji lub niezalogowany użytkownik.")
@@ -21,5 +22,6 @@ func GetUserData(c echo.Context) error {
 		"email":   email,
 		"name":    name,
 		"surname": surname,
+		"token":   token,
 	})
 }

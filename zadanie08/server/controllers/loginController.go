@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"errors"
+	"fmt"
 	"github.com/gorilla/sessions"
 	"github.com/labstack/echo-contrib/session"
 	"github.com/labstack/echo/v4"
@@ -15,6 +16,26 @@ import (
 type LoginRequest struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
+}
+
+func CreateSession(c echo.Context, user models.User) error {
+	sess, _ := session.Get("session", c)
+
+	sess.Options = &sessions.Options{
+		Path:     "/",
+		MaxAge:   86400, // 1 dzień
+		HttpOnly: true,
+	}
+
+	sess.Values["email"] = user.Email
+	sess.Values["name"] = user.Name
+	sess.Values["surname"] = user.Surname
+	err := sess.Save(c.Request(), c.Response())
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func LoginUser(c echo.Context) error {
@@ -36,19 +57,8 @@ func LoginUser(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusUnauthorized, map[string]string{"error": "Invalid credentials"})
 	}
-
-	sess, _ := session.Get("session", c)
-
-	sess.Options = &sessions.Options{
-		Path:     "/",
-		MaxAge:   86400, // 1 dzień
-		HttpOnly: true,
-	}
-
-	sess.Values["email"] = user.Email
-	sess.Values["name"] = user.Name
-	sess.Values["surname"] = user.Surname
-	err = sess.Save(c.Request(), c.Response())
+	
+	err = CreateSession(c, user)
 	if err != nil {
 		return err
 	}
@@ -61,8 +71,11 @@ func Logout(c echo.Context) error {
 	sess.Values = map[interface{}]interface{}{}
 	err := sess.Save(c.Request(), c.Response())
 	if err != nil {
+		fmt.Println("Failed to destroy session")
 		return err
 	}
+
+	fmt.Println("WYLGOOWANO")
 
 	return c.String(http.StatusOK, "Wylogowano.")
 }

@@ -1,16 +1,12 @@
 import {Link, useNavigate} from "react-router-dom";
-import { useLocation } from "react-router-dom";
 import {useAuth} from "../hooks/useAuth.ts";
 import axios from "axios";
 
 export default function HelloPage() {
     const navigate = useNavigate();
     const { user, loading } = useAuth();
-
-
-
     const handleLogout = () => {
-        axios.get("http://localhost:1323/logout").then(r => navigate("/login"))
+        axios.get("http://localhost:1323/logout", {withCredentials: true}).then(r => navigate("/login"))
     };
 
     if (loading) return <div>Ładowanie...</div>;
@@ -26,6 +22,7 @@ export default function HelloPage() {
                                 <span className="text-xl"><span className="text-stone-50 font-bold ">Email:</span> {user.email}</span>
                                 <span className="text-xl"><span className="text-stone-50 font-bold ">Imię:</span> {user.name}</span>
                                 <span className="text-xl"><span className="text-stone-50 font-bold ">Nazwisko:</span> {user.surname}</span>
+                                <span className="text-xl"><span className="text-stone-50 font-bold ">Token:</span> {user.token.slice(0, 10)}...</span>
                             </div>
                             <button
                                 onClick={handleLogout}

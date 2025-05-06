@@ -42,6 +42,16 @@ export default function LoginPage() {
         }
     };
 
+    const handleGoogleButton = () => {
+        axios.get("http://localhost:1323/google/login", {withCredentials: true})
+            .then(response => {
+                window.location.href = response.data;
+            })
+            .catch(error => {
+                console.error("Error during Google login", error);
+            });
+    }
+
     if (userLoading) return <div>Ładowanie...</div>;
 
     return (
@@ -87,7 +97,10 @@ export default function LoginPage() {
                     </Link>
                     <p className="text-md mt-2">lub zaloguj się przez:</p>
                     <div className="flex justify-center gap-4 mt-3">
-                        <button className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 cursor-pointer">
+                        <button
+                            className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 cursor-pointer"
+                            onClick={() => handleGoogleButton()}
+                        >
                             Google
                         </button>
                         <button className="bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-900 cursor-pointer">

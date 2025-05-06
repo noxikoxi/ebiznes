@@ -10,6 +10,7 @@ import (
 	"gorm.io/gorm"
 	"net/http"
 	"os"
+	"zadanie08/configs"
 	"zadanie08/database"
 	"zadanie08/models"
 
@@ -17,22 +18,27 @@ import (
 	"zadanie08/routers"
 )
 
+func init() {
+	err := godotenv.Load(".env")
+	if err != nil {
+		fmt.Println("Błąd podczas ładowania pliku .env:", err)
+	}
+}
+
 func main() {
 	db, err := gorm.Open(sqlite.Open("database/database.db"), &gorm.Config{
 		DisableForeignKeyConstraintWhenMigrating: false,
 	})
 
 	db.Exec("PRAGMA foreign_keys = ON")
-	err = db.AutoMigrate(&models.User{})
+	err = db.AutoMigrate(&models.User{}, &models.Tokens{})
 	if err != nil {
 		fmt.Println("Failed to migrate database")
 		return
 	}
 	database.InitDB(db)
-	err = godotenv.Load(".env")
-	if err != nil {
-		return
-	}
+	configs.InitAuthConfig()
+
 	e := echo.New()
 
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
@@ -47,6 +53,7 @@ func main() {
 	routers.RegisterRoutes(e)
 	routers.LoginRoutes(e)
 	routers.UserRoutes(e)
+	routers.GoogleRoutes(e)
 
 	e.Logger.Fatal(e.Start(":1323"))
 }
