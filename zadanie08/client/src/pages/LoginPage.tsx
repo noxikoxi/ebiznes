@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import {useEffect, useState} from 'react';
 import {Link, useNavigate} from "react-router-dom";
 import axios from "axios";
+import {useAuth} from "../hooks/useAuth.ts";
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
@@ -8,6 +9,13 @@ export default function LoginPage() {
     const [error, setError] = useState<string | null>(null)
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const { user, userLoading } = useAuth();
+
+    useEffect(() => {
+        if (user){
+            navigate("/hello")
+        }
+    }, [user, navigate]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -18,9 +26,8 @@ export default function LoginPage() {
             password
         };
         try {
-            const response = await axios.post('http://localhost:1323/login', userData);
-            const responseData: { email: string, name: string, surname: string } = response.data;
-            navigate("/hello", {state: responseData});
+            await axios.post('http://localhost:1323/login', userData, { withCredentials: true });
+            navigate("/hello");
         } catch (error: any) {
             if (error.response) {
                 setError(error.response.data.error || `HTTP error! status: ${error.response.status}`);
@@ -34,6 +41,8 @@ export default function LoginPage() {
             setLoading(false);
         }
     };
+
+    if (userLoading) return <div>Ładowanie...</div>;
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-dark-900">

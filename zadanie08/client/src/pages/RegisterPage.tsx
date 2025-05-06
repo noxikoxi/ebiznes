@@ -1,6 +1,7 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import axios from "axios";
+import {useAuth} from "../hooks/useAuth.ts";
 
 const RegisterPage = () => {
     const [email, setEmail] = useState('');
@@ -12,6 +13,14 @@ const RegisterPage = () => {
     const [error, setError] = useState<string | null>(null)
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+
+    const { user, userLoading } = useAuth();
+
+    useEffect(() => {
+        if (user){
+            navigate("/hello")
+        }
+    }, [user, navigate]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -45,6 +54,8 @@ const RegisterPage = () => {
             setLoading(false);
         }
     };
+
+    if (userLoading) return <div>Ładowanie...</div>;
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-dark-900">
@@ -119,7 +130,7 @@ const RegisterPage = () => {
                     </button>
                 </form>
                 <div className="mt-6 text-center">
-                    <Link to="/">
+                    <Link to="/login">
                         <p className="text-md">Masz już konto lub wolisz zalogować się przez Google/Github?</p>
                         <p className="text-md cursor-pointer underline">Zaloguj się!</p>
                     </Link>
