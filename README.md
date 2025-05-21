@@ -140,7 +140,7 @@ Kod hooka, zrzuty ekrany pokazujące jego działanie i badge w readme -> https:/
 
 :white_check_mark: 5.0 zapisywanie danych logowania OAuth2 po stronie serwera
 
-Link do commita -> https://github.com/noxikoxi/ebiznes/66ac7cc17a4573ed5f37e87b80dbc74570de3f5d
+Link do commita -> https://github.com/noxikoxi/ebiznes/1fe2b4ebf71c2de9e74b9d5448b96c8523eca75c
 
 Kod -> https://github.com/noxikoxi/ebiznes/tree/main/zadanie08
 
