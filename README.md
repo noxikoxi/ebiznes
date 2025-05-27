@@ -140,7 +140,7 @@ Kod hooka, zrzuty ekrany pokazujące jego działanie i badge w readme -> https:/
 
 :white_check_mark: 5.0 zapisywanie danych logowania OAuth2 po stronie serwera
 
-Link do commita -> https://github.com/noxikoxi/ebiznes/1fe2b4ebf71c2de9e74b9d5448b96c8523eca75c
+Link do commita -> https://github.com/noxikoxi/ebiznes/commit/1fe2b4ebf71c2de9e74b9d5448b96c8523eca75c
 
 Kod -> https://github.com/noxikoxi/ebiznes/tree/main/zadanie08
 
@@ -158,7 +158,7 @@ Demo -> https://github.com/noxikoxi/ebiznes/blob/main/demos/zadanie08-Oauth2.zip
 
 :white_check_mark: 5.0 filtrowanie odpowiedzi po sentymencie
 
-Link do commita -> https://github.com/noxikoxi/ebiznes/a5e468300146179867292162c064a20a5bf4ae69
+Link do commita -> https://github.com/noxikoxi/ebiznes/commit/a5e468300146179867292162c064a20a5bf4ae69
 
 Kod -> https://github.com/noxikoxi/ebiznes/tree/main/zadanie09
 
