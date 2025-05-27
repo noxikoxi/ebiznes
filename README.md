@@ -158,8 +158,8 @@ Demo -> https://github.com/noxikoxi/ebiznes/blob/main/demos/zadanie08-Oauth2.zip
 
 :white_check_mark: 5.0 filtrowanie odpowiedzi po sentymencie
 
-Link do commita -> https://github.com/noxikoxi/ebiznes/
+Link do commita -> https://github.com/noxikoxi/ebiznes/a5e468300146179867292162c064a20a5bf4ae69
 
 Kod -> https://github.com/noxikoxi/ebiznes/tree/main/zadanie09
 
-Demo -> https://github.com/noxikoxi/ebiznes/blob/main/demos/
+Demo -> https://github.com/noxikoxi/ebiznes/blob/main/demos/zadanie09-chat

@@ -345,7 +345,7 @@ suspend fun handleChatCommand(
     while (currentChatHistory.size > MAX_CHAT_HISTORY_PAIRS * 2) {
         // Usuń najstarsze widomości, ale w historii zawsze użytkownika musi być pierwsza
         currentChatHistory.removeAt(0)
-        currentChatHistory.removeAt(1)
+        currentChatHistory.removeAt(0)
     }
     // Utwórz obiekt ChatRequest
     val chatRequest = ChatRequest(
