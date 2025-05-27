@@ -145,3 +145,21 @@ Link do commita -> https://github.com/noxikoxi/ebiznes/1fe2b4ebf71c2de9e74b9d544
 Kod -> https://github.com/noxikoxi/ebiznes/tree/main/zadanie08
 
 Demo -> https://github.com/noxikoxi/ebiznes/blob/main/demos/zadanie08-Oauth2.zip
+
+### Zadanie 09 ChatGPT bot
+
+:white_check_mark: 3.0 należy stworzyć po stronie serwerowej osobny serwis do łącznia z chatGPT do usługi chat
+
+:white_check_mark: 3.5 należy stworzyć interfejs frontowy dla użytkownika, który komunikuje się z serwisem; odpowiedzi powinny być wysyałen do frontendowego interfejsu
+
+:white_check_mark: 4.0 stworzyć listę 5 różnych otwarć oraz zamknięć rozmowy
+
+:white_check_mark: 4.5 filtrowanie po zagadnieniach związanych ze sklepem (np. ograniczenie się jedynie do ubrań oraz samego sklepu) do GPT
+
+:white_check_mark: 5.0 filtrowanie odpowiedzi po sentymencie
+
+Link do commita -> https://github.com/noxikoxi/ebiznes/
+
+Kod -> https://github.com/noxikoxi/ebiznes/tree/main/zadanie09
+
+Demo -> https://github.com/noxikoxi/ebiznes/blob/main/demos/

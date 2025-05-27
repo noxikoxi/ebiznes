@@ -1,5 +1,6 @@
 plugins {
     kotlin("jvm") version "2.1.10"
+    kotlin("plugin.serialization") version "2.1.10"
 }
 
 group = "org.example"
@@ -24,7 +25,10 @@ dependencies {
 
     // for discord api
     implementation("io.ktor:ktor-client-websockets:2.3.8")
-    implementation("io.ktor:ktor-client-serialization:2.3.8")
+
+    // dla chatu
+    implementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
 }
 
 tasks.test {

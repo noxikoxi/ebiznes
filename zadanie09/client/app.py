@@ -44,15 +44,14 @@ user_input = st.chat_input("Napisz wiadomość...")
 
 if user_input:
     for word in user_input.lower().split(" "):
-        for finish_word in ["koniec", "pa", "do widzenia", "dziekuje za pomoc", "dzięki", "dzieki", "dziękuję", "narazie"]:
-            if word.startswith(finish_word):
-                with st.chat_message("user"):
-                    st.write(user_input)
-                with st.chat_message("assistant"):
-                    st.write(random.choice(farewell_messages))
-                # koniec rozmowy
-                st.session_state.chat_history = []
-                st.stop()
+        if word in ["koniec", "pa", "do widzenia", "dziekuje za pomoc", "dzięki", "dzieki", "dziękuję", "narazie"]:
+            with st.chat_message("user"):
+                st.write(user_input)
+            with st.chat_message("assistant"):
+                st.write(random.choice(farewell_messages))
+            # koniec rozmowy
+            st.session_state.chat_history = []
+            st.stop()
 
     st.session_state.chat_history.append({"role": "user", "content": user_input})
 

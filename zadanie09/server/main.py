@@ -55,7 +55,7 @@ async def chat_endpoint(request: ChatRequest):
     prompt = tokenizer.apply_chat_template(conversation_for_model, tokenize=False, add_generation_prompt=True)
     inputs = tokenizer.encode(prompt, add_special_tokens=False, return_tensors="pt").to(model.device)
     # Generowanie odpowiedzi przez model LLM
-    outputs = model.generate(input_ids=inputs, max_new_tokens=300, temperature=0.7, top_p=0.9, do_sample=True)
+    outputs = model.generate(input_ids=inputs, max_new_tokens=150, temperature=0.7, top_p=0.9, do_sample=True)
     response_text = tokenizer.decode(outputs[0][len(inputs[0]):], skip_special_tokens=True).strip()
 
     return {"response": response_text}

@@ -4,6 +4,7 @@
 - !hello
 - !kategorie
 - !produkty {kategoria}
+- !chat {wiadomość}
 
 Można wywołać komendę bez ! oznaczając bota:
 - <@Bot> hello
