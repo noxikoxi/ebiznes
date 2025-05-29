@@ -163,3 +163,22 @@ Link do commita -> https://github.com/noxikoxi/ebiznes/commit/a5e468300146179867
 Kod -> https://github.com/noxikoxi/ebiznes/tree/main/zadanie09
 
 Demo -> https://github.com/noxikoxi/ebiznes/blob/main/demos/zadanie09-chat
+
+
+### Zadanie 10 Github Actions + Chmura
+
+:white_check_mark: 3.0 Należy stworzyć odpowiednie instancje po stronie chmury nadockerze
+
+:white_check_mark: 3.5 Stworzyć odpowiedni pipeline w Github Actions do budowania aplikacji (np. via fatjar)
+
+:white_check_mark: 4.0 Dodać notyfikację mailową o zbudowaniu aplikacji
+
+:white_check_mark: 4.5 Dodać krok z deploymentem aplikacji serwerowej oraz klienckiej na chmurę
+
+:x: 5.0 Dodać uruchomienie regresyjnych testów automatycznych (funkcjonalnych) jako krok w Actions
+
+Link do commita -> https://github.com/noxikoxi/products/commit/38631142728d96783f6118cba50b0f98cf575080
+
+Kod -> https://github.com/noxikoxi/products
+
+Readme do zadania -> https://github.com/noxikoxi/ebiznes/tree/main/zadanie10
